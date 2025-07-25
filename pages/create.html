@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homeroom Heroes - Create Teacher Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico">
+    <style>
+        /* Ensure the font is applied globally */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1f2937; /* Tailwind's bg-gray-800 */
+            color: #f9fafb; /* Tailwind's text-gray-50 */
+        }
+        /* Custom styles for hamburger menu items */
+        .menu-items .listButton {
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            color: white;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 0.375rem; /* rounded-md */
+        }
+        .menu-items .listButton:hover {
+            background-color: rgba(255, 255, 255, 0.1); /* Light hover effect */
+        }
+        /* Positioning for the dropdown menu */
+        .menu-items {
+            flex-direction: column; /* Stacks buttons vertically */
+            position: absolute;
+            top: 100%; /* Position below the header or its relative parent */
+            right: 0;
+            background-color: #1a472a; /* Darker green for dropdown */
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 20;
+            min-width: 150px;
+            padding: 0.5rem;
+            /* The 'hidden' class from HTML/JS will control its visibility */
+        }
+
+        /* --- Modal specific styles --- */
+        .modal {
+            display: none; /* Changed to none here to hide it by default */
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            align-items: center; /* For centering content when displayed */
+            justify-content: center; /* For centering content when displayed */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 0.5rem;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-gray-50">
+    <header class="bg-gradient-to-r from-green-700 to-green-900 text-white shadow-lg py-4 md:py-6 relative">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="/pages/homepage.html" class="flex items-center">
+                    <img src="/static/images/logo_transparent.png" alt="Homeroom Heroes Logo" class="h-16 md:h-20 mr-3">
+                </a>
+                <nav class="hidden md:flex ml-4">
+                    <ul class="flex space-x-4 md:space-x-8 text-lg">
+                        <li><a href="/pages/homepage.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Home</a></li>
+                        <li><a href="/pages/index.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Donate</a></li>
+                        <li><a href="/pages/register.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Sign Up</a></li>
+                        <li><a href="/pages/about.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">About</a></li>
+                        <li><a href="/pages/contact.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Contact</a></li>
+                        <li><a href="/pages/partners.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Radio Partners</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="relative">
+                <button id="hamburgerButton" class="text-white text-3xl focus:outline-none" onclick="toggleMenu()">☰</button>
+
+                <div class="menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden" id="menuItems">
+                    <button id="loginButton" class="listButton hidden" onclick="redirectTo('/pages/login.html')">Login</button>
+                    <button id="logoutButton" class="listButton hidden" onclick="logout()">Logout</button>
+                    <button id="mypageButton" class="listButton hidden" onclick="mypage()">My Page</button>
+                    <button id="validationButton" class="listButton hidden" onclick="redirectTo('/pages/validation.html')">Validation</button>
+                    <button id="createButton" class="listButton hidden" onclick="redirectTo('/pages/create.html')">Create</button>
+                    <button id="adminButton" class="listButton hidden" onclick="redirectTo('/pages/admin.html')">Admin</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white p-8 rounded-lg shadow-md text-gray-800 max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold text-green-800 mb-6 text-center">Create Teacher Profile</h2>
+            <form id="create-form" method="post" enctype="multipart/form-data" class="space-y-6">
+                <div>
+                    <label for="name" class="block text-lg font-medium text-gray-700 mb-2">Full Name:</label>
+                    <input type="text" id="name" name="name" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                </div>
+
+                <div>
+                    <label for="state" class="block text-lg font-medium text-gray-700 mb-2">State:</label>
+                    <select id="state" name="state" onchange="populateCountiesDropdown()" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                        <option value="" disabled selected>Choose state</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="county" class="block text-lg font-medium text-gray-700 mb-2">County:</label>
+                    <select id="county" name="county" onchange="populateDistrictsDropdown()" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                        <option value="" disabled selected>Choose county</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="district" class="block text-lg font-medium text-gray-700 mb-2">School District:</label>
+                    <select id="district" name="district" onchange="populateSchoolsDropdown()" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                        <option value="" disabled selected>Choose district</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="school" class="block text-lg font-medium text-gray-700 mb-2">School:</label>
+                    <select id="school" name="school" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                        <option value="" disabled selected>Choose school</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="aboutMe" class="block text-lg font-medium text-gray-700 mb-2">About Me:</label>
+                    <textarea id="aboutMe" name="aboutMe" maxlength="500" rows="4" oninput="updateCharacterCount()" required
+                              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900 resize-y"></textarea>
+                    <div id="charCount" class="text-sm text-gray-500 mt-1">500 characters remaining</div>
+                </div>
+
+                <div>
+                    <label for="wishlist" class="block text-lg font-medium text-gray-700 mb-2">Amazon Wishlist URL:</label>
+                    <p class="text-sm text-gray-600 mb-2">If you need help, please follow our directions below to ensure that your link works. Registry links do not work.</p>
+                    <button id="wishlistButton" type="button" onclick="openWishlistSetup()"
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md mb-4">
+                        How to Get Link
+                    </button>
+                    <input type="text" id="wishlist" name="wishlist" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                </div>
+                
+                <button id="submitButton" type="submit"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md mt-6">
+                    Submit
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <div id="wishlistModal" class="modal">
+        <div class="modal-content text-gray-800">
+            <span class="close" onclick="closeWishlistSetup()">&times;</span>
+            <iframe src="/pages/wishlist_setup.html" class="w-full h-[500px]" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white py-6 mt-8 rounded-t-lg shadow-inner text-center">
+        <div class="container mx-auto px-4 text-sm">
+            <p>&copy; 2024 Homeroom Heroes. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+
+        function toggleMenu() {
+            const menuItems = document.getElementById('menuItems');
+            menuItems.classList.toggle('hidden');
+        }
+
+        async function checkAuthentication() {
+            // Hide all dynamic buttons by default
+            const buttons = [
+                'loginButton', 'logoutButton', 'mypageButton',
+                'validationButton', 'createButton', 'adminButton'
+            ];
+            buttons.forEach(id => {
+                const button = document.getElementById(id);
+                if (button) {
+                    button.classList.add('hidden');
+                    button.classList.remove('block');
+                }
+            });
+
+            let userRole = null;
+
+            try {
+                const response = await fetch('/profile/');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.user_role) {
+                        userRole = data.user_role;
+                    } else {
+                        console.warn('Profile data missing user_role or is null:', data);
+                    }
+                } else {
+                    console.error('Failed to fetch profile. Status:', response.status);
+                }
+            } catch (error) {
+                console.error('Network or parsing error fetching user profile:', error);
+            }
+
+            if (userRole === 'admin') {
+                document.getElementById('logoutButton')?.classList.remove('hidden');
+                document.getElementById('logoutButton')?.classList.add('block');
+                document.getElementById('adminButton')?.classList.remove('hidden');
+                document.getElementById('adminButton')?.classList.add('block');
+            } else if (userRole === 'teacher') {
+                document.getElementById('logoutButton')?.classList.remove('hidden');
+                document.getElementById('logoutButton')?.classList.add('block');
+                document.getElementById('mypageButton')?.classList.remove('hidden');
+                document.getElementById('mypageButton')?.classList.add('block');
+            } else {
+                window.location.href = '/pages/403.html';
+            }
+        }
+
+        async function logout() {
+            try {
+                const response = await fetch(`/logout/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    console.error('Logout failed:', response.status);
+                    alert('Logout failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+                alert('An error occurred during logout. Please try again.');
+            }
+        }
+
+        async function mypage() {
+            try {
+                const response = await fetch('/myinfo/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/pages/teacher.html';
+                } else {
+                    console.error('Error fetching my page info:', response.status);
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Error fetching my page info:', error);
+                window.location.href = '/';
+            }
+        }
+
+        async function populateStatesDropdown() {
+            try {
+                const response = await fetch("/get_states/");
+                const states = await response.json();
+                const stateDropdown = document.getElementById("state");
+                stateDropdown.innerHTML = '<option value="" disabled selected>Choose state</option>';
+                states.forEach(state => {
+                    stateDropdown.add(new Option(state, state));
+                });
+            } catch (error) {
+                console.error("Error retrieving state information:", error);
+                alert("Error retrieving state information. " + error.message);
+            }
+        }
+
+        async function populateCountiesDropdown() {
+            try {
+                const selectedState = document.getElementById("state").value;
+                const countyDropdown = document.getElementById("county");
+                countyDropdown.innerHTML = '<option value="" disabled selected>Choose county</option>';
+                if (selectedState) {
+                    const response = await fetch(`/get_counties/${selectedState}`);
+                    const counties = await response.json();
+                    counties.forEach(county => {
+                        countyDropdown.add(new Option(county, county));
+                    });
+                }
+                document.getElementById("district").innerHTML = '<option value="" disabled selected>Choose district</option>';
+                document.getElementById("school").innerHTML = '<option value="" disabled selected>Choose school</option>';
+            } catch (error) {
+                console.error("Error retrieving county information:", error);
+                alert("Error retrieving county information. " + error.message);
+            }
+        }
+
+        async function populateDistrictsDropdown() {
+            try {
+                const selectedState = document.getElementById("state").value;
+                const selectedCounty = document.getElementById("county").value;
+                const districtDropdown = document.getElementById("district");
+                districtDropdown.innerHTML = '<option value="" disabled selected>Choose district</option>';
+                if (selectedState && selectedCounty) {
+                    const response = await fetch(`/get_districts/${selectedState}/${selectedCounty}`);
+                    const districts = await response.json();
+                    districts.forEach(district => {
+                        districtDropdown.add(new Option(district, district));
+                    });
+                }
+                document.getElementById("school").innerHTML = '<option value="" disabled selected>Choose school</option>';
+            } catch (error) {
+                console.error("Error retrieving district information:", error);
+                alert("Error retrieving district information. " + error.message);
+            }
+        }
+
+        async function populateSchoolsDropdown() {
+            try {
+                const selectedState = document.getElementById("state").value;
+                const selectedCounty = document.getElementById("county").value;
+                const selectedDistrict = document.getElementById("district").value;
+                const schoolDropdown = document.getElementById("school");
+                schoolDropdown.innerHTML = '<option value="" disabled selected>Choose school</option>';
+                if (selectedState && selectedCounty && selectedDistrict) {
+                    const response = await fetch(`/get_schools/${selectedState}/${selectedCounty}/${selectedDistrict}`);
+                    const schools = await response.json();
+                    schools.forEach(school => {
+                        schoolDropdown.add(new Option(school, school));
+                    });
+                }
+            } catch (error) {
+                console.error("Error retrieving school information:", error);
+                alert("Error retrieving school information. " + error.message);
+            }
+        }
+        
+        function updateCharacterCount() {
+            const maxLength = 500;
+            const currentLength = document.getElementById("aboutMe").value.length;
+            const charsRemaining = maxLength - currentLength;
+            const countElement = document.getElementById("charCount");
+            countElement.textContent = charsRemaining + " characters remaining";
+        }
+
+        // Functions to open/close the modal
+        function openWishlistSetup() {
+            document.getElementById('wishlistModal').style.display = 'flex';
+        }
+
+        function closeWishlistSetup() {
+            document.getElementById('wishlistModal').style.display = 'none';
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            checkAuthentication();
+            populateStatesDropdown();
+            updateCharacterCount();
+
+            const createForm = document.getElementById("create-form");
+            const createButton = document.getElementById("submitButton");
+
+            if (createForm && createButton) {
+                createButton.addEventListener("click", async function (event) {
+                    event.preventDefault();
+                    const formData = new FormData(createForm);
+
+                    try {
+                        const response = await fetch("/create_teacher_profile/", {
+                            method: "POST",
+                            body: formData,
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            alert(data.message);
+                            if (data.role === 'teacher') {
+                                mypage();
+                            } else {
+                                window.location.href = '/pages/homepage.html';
+                            }
+                        } else {
+                            alert(data.message || "Profile creation failed. Please try again.");
+                            window.location.reload();
+                        }
+                    } catch (error) {
+                        console.error('Error during profile creation:', error);
+                        alert('An error occurred during profile creation. Please try again.');
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

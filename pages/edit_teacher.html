@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Teacher Profile - Homeroom Heroes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico">
+    <style>
+        /* Ensure the font is applied globally */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1f2937; /* Tailwind's bg-gray-800 */
+            color: #f9fafb; /* Tailwind's text-gray-50 */
+        }
+        /* Custom styles for hamburger menu items */
+        .menu-items .listButton {
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            color: white;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 0.375rem; /* rounded-md */
+        }
+        .menu-items .listButton:hover {
+            background-color: rgba(255, 255, 255, 0.1); /* Light hover effect */
+        }
+        /* Positioning for the dropdown menu */
+        .menu-items {
+            flex-direction: column; /* Stacks buttons vertically */
+            position: absolute;
+            top: 100%; /* Position below the header or its relative parent */
+            right: 0;
+            background-color: #1a472a; /* Darker green for dropdown */
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 20;
+            min-width: 150px;
+            padding: 0.5rem;
+            /* The 'hidden' class from HTML/JS will control its visibility */
+        }
+
+        /* --- MODAL SPECIFIC STYLES --- */
+        .modal {
+            display: none; /* THIS IS THE CRITICAL CHANGE: Start hidden */
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            /* The 'display: flex;' to center content will be applied by JavaScript when opened */
+            align-items: center; /* Ensures content is centered when JS sets display to flex */
+            justify-content: center; /* Ensures content is centered when JS sets display to flex */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%; /* Responsive width */
+            max-width: 800px; /* Max width */
+            border-radius: 0.5rem;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-gray-50">
+    <header class="bg-gradient-to-r from-green-700 to-green-900 text-white shadow-lg py-4 md:py-6 relative">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="/pages/homepage.html" class="flex items-center">
+                    <img src="/static/images/logo_transparent.png" alt="Homeroom Heroes Logo" class="h-16 md:h-20 mr-3">
+                </a>
+                <nav class="hidden md:flex ml-4">
+                    <ul class="flex space-x-4 md:space-x-8 text-lg">
+                        <li><a href="/pages/homepage.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Home</a></li>
+                        <li><a href="/pages/index.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Donate</a></li>
+                        <li><a href="/pages/register.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Sign Up</a></li>
+                        <li><a href="/pages/about.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">About</a></li>
+                        <li><a href="/pages/contact.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Contact</a></li>
+                        <li><a href="/pages/partners.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Radio Partners</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="relative">
+                <button id="hamburgerButton" class="text-white text-3xl focus:outline-none" onclick="toggleMenu()">☰</button>
+
+                <div class="menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden" id="menuItems">
+                    <button id="loginButton" class="listButton hidden" onclick="redirectTo('/pages/login.html')">Login</button>
+                    <button id="logoutButton" class="listButton hidden" onclick="logout()">Logout</button>
+                    <button id="mypageButton" class="listButton hidden" onclick="mypage()">My Page</button>
+                    <button id="validationButton" class="listButton hidden" onclick="redirectTo('/pages/validation.html')">Validation</button>
+                    <button id="createButton" class="listButton hidden" onclick="redirectTo('/pages/create.html')">Create</button>
+                    <button id="adminButton" class="listButton hidden" onclick="redirectTo('/pages/admin.html')">Admin</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white p-8 rounded-lg shadow-md text-gray-800 max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold text-green-800 mb-6 text-center">Edit Teacher Profile</h2>
+
+            <form id="update-info-form" method="post" class="mb-8 space-y-4">
+                <h3 class="text-2xl font-semibold text-green-700">Update About Me</h3>
+                <div>
+                    <label for="aboutMe" class="block text-lg font-medium text-gray-700 mb-2">About Me:</label>
+                    <textarea id="aboutMe" name="aboutMe" maxlength="500" rows="4" oninput="updateCharacterCount()" required
+                              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900 resize-y"></textarea>
+                    <div id="charCount" class="text-sm text-gray-500 mt-1">500 characters remaining</div>
+                </div>
+                <button type="button" id="submitInfoButton"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                    Update About Me
+                </button>
+            </form>
+
+            <hr class="my-8 border-gray-300">
+
+            <form id="update-wishlist-form" method="post" class="mb-8 space-y-4">
+                <h3 class="text-2xl font-semibold text-green-700">Update Wishlist</h3>
+                <div>
+                    <label for="wishlist" class="block text-lg font-medium text-gray-700 mb-2">Amazon Wishlist URL:</label>
+                    <p class="text-sm text-gray-600 mb-2">If you need help, please follow our directions below to ensure that your link works. Registry links do not work.</p>
+                    <button id="wishlistButton" type="button" onclick="openWishlistSetup()"
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md mb-4">
+                        How to Get Link
+                    </button>
+                    <input type="text" id="wishlist" name="wishlist" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                </div>
+                <button type="submit" id="submitWishlistButton"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                    Update Wishlist
+                </button>
+            </form>
+
+            <hr class="my-8 border-gray-300">
+
+            <form id="update-urlid-form" method="post" class="space-y-4">
+                <h3 class="text-2xl font-semibold text-green-700">Update URL ID</h3>
+                <p class="text-sm text-gray-600">The URL ID is your unique marker for your page when using the <button id="shareButton" type="button" class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Share</button> button.</p>
+                <p class="text-sm text-gray-600">The format is: <span class="font-mono text-gray-800">www.HelpTeachers.net/teacher/{url id}</span></p>
+                <div>
+                    <label for="url_id" class="block text-lg font-medium text-gray-700 mb-2">URL ID:</label>
+                    <input type="text" id="url_id" name="url_id" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                </div>
+                <button type="button" id="submitUrlIdButton"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                    Update URL ID
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <div id="wishlistModal" class="modal">
+        <div class="modal-content text-gray-800">
+            <span class="close" onclick="closeWishlistSetup()">&times;</span>
+            <iframe src="/pages/wishlist_setup.html" class="w-full h-[500px]" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white py-6 mt-8 rounded-t-lg shadow-inner text-center">
+        <div class="container mx-auto px-4 text-sm">
+            <p>&copy; 2024 Homeroom Heroes. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+
+        function toggleMenu() {
+            const menuItems = document.getElementById('menuItems');
+            menuItems.classList.toggle('hidden');
+        }
+
+        async function checkAuthentication() {
+            // Hide all dynamic buttons by default
+            const buttons = [
+                'loginButton', 'logoutButton', 'mypageButton',
+                'validationButton', 'createButton', 'adminButton'
+            ];
+            buttons.forEach(id => {
+                const button = document.getElementById(id);
+                if (button) {
+                    button.classList.add('hidden');
+                    button.classList.remove('block');
+                }
+            });
+
+            let userRole = null;
+
+            try {
+                const response = await fetch('/profile/');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.user_role) {
+                        userRole = data.user_role;
+                        // Pre-fill existing data if available
+                        document.getElementById('aboutMe').value = data.aboutMe || '';
+                        document.getElementById('wishlist').value = data.wishlist || '';
+                        document.getElementById('url_id').value = data.url_id || '';
+                        updateCharacterCount(); // Update count after pre-filling
+                    } else {
+                        console.warn('Profile data missing user_role or is null:', data);
+                    }
+                } else {
+                    console.error('Failed to fetch profile. Status:', response.status);
+                }
+            } catch (error) {
+                console.error('Network or parsing error fetching user profile:', error);
+            }
+
+            // Only allow teachers or admins on this page.
+            if (userRole === 'teacher') {
+                document.getElementById('logoutButton')?.classList.remove('hidden');
+                document.getElementById('logoutButton')?.classList.add('block');
+                document.getElementById('mypageButton')?.classList.remove('hidden');
+                document.getElementById('mypageButton')?.classList.add('block');
+                document.getElementById('validationButton')?.classList.remove('hidden');
+                document.getElementById('validationButton')?.classList.add('block');
+            } else if (userRole === 'admin') {
+                document.getElementById('logoutButton')?.classList.remove('hidden');
+                document.getElementById('logoutButton')?.classList.add('block');
+                document.getElementById('validationButton')?.classList.remove('hidden');
+                document.getElementById('validationButton')?.classList.add('block');
+                document.getElementById('createButton')?.classList.remove('hidden');
+                document.getElementById('createButton')?.classList.add('block');
+                document.getElementById('adminButton')?.classList.remove('hidden'); // Show admin button in menu
+                document.getElementById('adminButton')?.classList.add('block');
+            } else {
+                // If not logged in as teacher or admin, redirect to 403
+                window.location.href = '/pages/403.html';
+            }
+        }
+
+        async function logout() {
+            try {
+                const response = await fetch(`/logout/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/'; // Redirect to root after successful logout
+                } else {
+                    console.error('Logout failed:', response.status);
+                    alert('Logout failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+                alert('An error occurred during logout. Please try again.');
+            }
+        }
+
+        async function mypage() {
+            try {
+                const response = await fetch('/myinfo/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/pages/teacher.html';
+                } else {
+                    console.error('Error fetching my page info:', response.status);
+                    window.location.href = '/'; // Redirect to homepage or login if error
+                }
+            } catch (error) {
+                console.error('Error fetching my page info:', error);
+                window.location.href = '/'; // Redirect to homepage or login if error
+            }
+        }
+
+        function updateCharacterCount() {
+            const maxLength = 500;
+            const currentLength = document.getElementById("aboutMe").value.length;
+            const charsRemaining = maxLength - currentLength;
+            const countElement = document.getElementById("charCount");
+            countElement.textContent = charsRemaining + " characters remaining";
+        }
+
+        // Functions to open/close the modal
+        function openWishlistSetup() {
+            document.getElementById('wishlistModal').style.display = 'flex'; // Set to flex to center content
+        }
+
+        function closeWishlistSetup() {
+            document.getElementById('wishlistModal').style.display = 'none';
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            checkAuthentication();
+            // Initial call to update character count if "aboutMe" has pre-filled content
+            updateCharacterCount();
+
+            const updateInfoForm = document.getElementById("update-info-form");
+            const updateWishlistForm = document.getElementById("update-wishlist-form");
+            const updateUrlIdForm = document.getElementById("update-urlid-form");
+
+            document.getElementById("submitInfoButton").addEventListener("click", async function (event) {
+                event.preventDefault();
+                const formData = new FormData(updateInfoForm);
+
+                try {
+                    const response = await fetch("/update_info/", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert(data.message);
+                        window.location.href = '/pages/teacher.html'; // Redirect to teacher page on success
+                    } else {
+                        alert(data.detail || 'Failed to update info. Please try again.');
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                    window.location.reload();
+                }
+            });
+
+            document.getElementById("submitWishlistButton").addEventListener("click", async function (event) {
+                event.preventDefault();
+                const formData = new FormData(updateWishlistForm);
+
+                try {
+                    const response = await fetch("/update_wishlist/", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert(data.message);
+                        window.location.href = '/pages/teacher.html'; // Redirect to teacher page on success
+                    } else {
+                        alert(data.detail || 'Failed to update wishlist. Please try again.');
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                    window.location.reload();
+                }
+            });
+
+            document.getElementById("submitUrlIdButton").addEventListener("click", async function (event) {
+                event.preventDefault();
+                const formData = new FormData(updateUrlIdForm);
+
+                try {
+                    const response = await fetch("/update_url_id/", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert(data.message);
+                        window.location.href = '/pages/teacher.html'; // Redirect to teacher page on success
+                    } else {
+                        alert(data.detail || 'Failed to update URL ID. Please try again.');
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                    window.location.reload();
+                }
+            });
+            // The share button intentionally has no JS listener as requested.
+        });
+    </script>
+</body>
+</html>

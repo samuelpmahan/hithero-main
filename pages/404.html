@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>403 - Forbidden - Homeroom Heroes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico" />
+    <style>
+        /* Ensure the font is applied globally */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1f2937; /* Tailwind's bg-gray-800 */
+            color: #f9fafb; /* Tailwind's text-gray-50 */
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-gray-50 flex flex-col min-h-screen">
+
+    <header class="bg-gradient-to-r from-green-700 to-green-900 text-white shadow-lg py-4 md:py-6">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="/pages/homepage.html" class="flex items-center">
+                <img src="/static/images/logo_transparent.png" alt="Homeroom Heroes Logo" class="h-16 md:h-20 mr-3">
+            </a>
+            <nav class="hidden md:flex">
+                <ul class="flex space-x-4 md:space-x-8 text-lg">
+                    <li><a href="/pages/homepage.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Home</a></li>
+                    <li><a href="/pages/index.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Donate</a></li>
+                    <li><a href="/pages/register.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Sign Up</a></li>
+                    <li><a href="/pages/about.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">About</a></li>
+                    <li><a href="/pages/contact.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Contact</a></li>
+                    <li><a href="/pages/partners.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Radio Partners</a></li>
+                </ul>
+            </nav>
+            <div class="md:hidden">
+                </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8 flex items-center justify-center">
+        <section class="bg-white p-8 rounded-lg shadow-md text-center max-w-lg w-full">
+            <h1 class="text-6xl font-extrabold text-red-600 mb-4">404</h1>
+            <p class="text-gray-700 text-2xl font-semibold mb-6">Page Does Not Exist</p>
+            <p class="mt-8">
+                <a href="/pages/homepage.html" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md text-lg">
+                    Go to Homepage
+                </a>
+            </p>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-auto rounded-t-lg shadow-inner text-center">
+        <div class="container mx-auto px-4 text-sm">
+            <p>&copy; 2024 Homeroom Heroes. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

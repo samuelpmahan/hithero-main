@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homeroom Heroes - Support Teachers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Your existing CSS styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1f2937;
+            color: #f9fafb;
+        }
+        .menu-items .listButton {
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            color: white;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 0.375rem;
+        }
+        .menu-items .listButton:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .menu-items {
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: #1a472a;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 20;
+            min-width: 150px;
+            padding: 0.5rem;
+        }
+        .teacher-home {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+        }
+        .teacher-home img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 9999px;
+            border: 2px solid #34d399;
+            margin-bottom: 1rem;
+        }
+        .teacher-details h2 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            color: #10b981;
+            margin-bottom: 0.5rem;
+        }
+        .teacher-details p {
+            font-size: 1.125rem;
+            color: #e1e1e2;
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-gray-50">
+    <header class="bg-gradient-to-r from-green-700 to-green-900 text-white shadow-lg py-4 md:py-6 relative">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="/pages/homepage.html" class="flex items-center">
+                    <img src="/static/images/logo_transparent.png" alt="Homeroom Heroes Logo" class="h-16 md:h-20 mr-3">
+                </a>
+                <nav class="hidden md:flex ml-4"> <ul class="flex space-x-4 md:space-x-8 text-lg">
+                        <li><a href="/pages/homepage.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Home</a></li>
+                        <li><a href="/pages/index.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Donate</a></li>
+                        <li><a href="/pages/register.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Sign Up</a></li>
+                        <li><a href="/pages/about.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">About</a></li>
+                        <li><a href="/pages/contact.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Contact</a></li>
+                        <li><a href="/pages/partners.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Radio Partners</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="relative"> <button id="hamburgerButton" class="text-white text-3xl focus:outline-none" onclick="toggleMenu()">☰</button>
+
+                <div class="menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden" id="menuItems">
+                    <button id="loginButton" class="listButton hidden" onclick="redirectTo('/pages/login.html')">Login</button>
+                    <button id="mypageButton" class="listButton hidden" onclick="mypage()">My Page</button>
+                    <button id="validationButton" class="listButton hidden" onclick="redirectTo('/pages/validation.html')">Validation</button>
+                    <button id="createButton" class="listButton hidden" onclick="redirectTo('/pages/create.html')">Create</button>
+                    <button id="adminButton" class="listButton hidden" onclick="redirectTo('/pages/admin.html')">Admin</button>
+                    <button id="logoutButton" class="listButton hidden" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+
+    <section id="promoHeroSection" class="relative bg-cover bg-center h-96 flex items-center justify-center text-white rounded-lg shadow-lg mb-8 hidden"
+        style="background-image: url('/static/images/hero_border.jpg');"> <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div> <div class="relative z-10 w-full h-full flex flex-col md:flex-row items-center justify-center p-4">
+            <div class="md:w-1/2 flex justify-center items-center h-full mb-4 md:mb-0">
+                <img id="promoHeroImage" src="" alt="Promotional Material" class="max-w-full max-h-full object-contain rounded-lg shadow-lg border-4 border-green-500">
+            </div>
+            
+            <div class="md:w-1/2 text-center md:text-left md:pl-8">
+                <h2 id="promoHeroTitle" class="text-3xl md:text-5xl font-extrabold mb-4 drop-shadow-lg"></h2>
+                </div>
+        </div>
+    </section>
+        <section class="relative bg-cover bg-center h-96 flex items-center justify-center text-white rounded-lg shadow-lg mb-8"
+            style="background-image: url('/static/images/hero_border.jpg');">
+            <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div> <div class="relative z-10 text-center p-4">
+                <h2 class="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">Support Teachers, Empower Futures!</h2>
+                <p class="text-xl md:text-2xl font-light drop-shadow-md mb-8">Connecting generous donors with teachers in need of classroom supplies.</p>
+                <button onclick="redirectTo('/pages/index.html')" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                    Find Teachers to Support
+                </button>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <section class="bg-white p-8 rounded-lg shadow-md text-center text-gray-800 relative overflow-hidden"
+                style="background-image: url('/static/images/tile_border_1.jpg'); background-size: cover; background-position: center;">
+                <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div> <div class="relative z-10">
+                    <h2 class="text-3xl font-bold text-white mb-4">Teacher of the Day</h2>
+                    <div id="teacherDay" class="flex flex-col items-center justify-center">
+                        <p class="text-white">Loading teacher of the day...</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white p-8 rounded-lg shadow-md text-center text-gray-800 relative overflow-hidden"
+                style="background-image: url('/static/images/tile_border_3.jpg'); background-size: cover; background-position: center;">
+                <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div> <div class="relative z-10">
+                    <h2 class="text-3xl font-bold text-white mb-4">Are You a Teacher?</h2>
+                    <p class="text-lg leading-relaxed mb-6 text-white">If you're an educator in need of support, register to create your profile.</p>
+                    <button onclick="redirectTo('/pages/register.html')" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                        Register
+                    </button>
+                </div>
+            </section>
+
+            <section class="bg-white p-8 rounded-lg shadow-md text-center text-gray-800 relative overflow-hidden"
+                style="background-image: url('/static/images/tile_border_4.jpg'); background-size: cover; background-position: center;">
+                <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div> <div class="relative z-10">
+                    <h2 class="text-3xl font-bold text-white mb-4">Donate Directly to Us</h2>
+                    <p class="text-lg leading-relaxed mb-6 text-white">Click the button below if you would like to make a direct donation to Homeroom Heroes:</p>
+                    <button onclick="redirectTo('https://www.paypal.com/donate/?hosted_button_id=B8NRR79ZEV2PS')" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                        Donate
+                    </button>
+                </div>
+            </section>
+
+            <section class="bg-white p-8 rounded-lg shadow-md text-center text-gray-800 relative overflow-hidden"
+                style="background-image: url('/static/images/tile_border_2.jpg'); background-size: cover; background-position: center;">
+                <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div> <div class="relative z-10">
+                    <h2 class="text-3xl font-bold text-white mb-4">Find a Random Teacher</h2>
+                    <p class="text-lg leading-relaxed mb-6 text-white">Discover a teacher at random and make a positive impact on their classroom.</p>
+                    <button onclick="randomTeacher()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                        Find Random Teacher
+                    </button>
+                    <div id="randomTeacherInfo" class="flex flex-col items-center justify-center mt-6">
+                        </div>
+                </div>
+            </section>
+        </div>
+
+        </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-8 rounded-t-lg shadow-inner text-center">
+        <div class="container mx-auto px-4 text-sm">
+            <p>&copy; 2024 Homeroom Heroes. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Your existing JavaScript functions
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+
+        function toggleMenu() {
+            var menuItems = document.getElementById('menuItems');
+            menuItems.classList.toggle('hidden');
+        }
+
+        async function checkAuthentication() {
+            const buttons = [
+                'loginButton', 'logoutButton', 'mypageButton',
+                'validationButton', 'createButton', 'adminButton'
+            ];
+
+            buttons.forEach(id => {
+                const button = document.getElementById(id);
+                if (button) {
+                    button.classList.add('hidden');
+                    button.classList.remove('block');
+                }
+            });
+
+            let userRole = null;
+
+            try {
+                const response = await fetch('/profile/');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.user_role) {
+                        userRole = data.user_role;
+                    } else {
+                        console.warn('Profile data missing user_role or is null:', data);
+                    }
+                } else {
+                    console.error('Failed to fetch profile. Status:', response.status);
+                }
+            } catch (error) {
+                console.error('Network or parsing error fetching user profile:', error);
+            }
+
+            if (userRole === 'teacher') {
+                document.getElementById('mypageButton').classList.remove('hidden');
+                document.getElementById('mypageButton').classList.add('block');
+                document.getElementById('validationButton').classList.remove('hidden');
+                document.getElementById('validationButton').classList.add('block');
+                document.getElementById('logoutButton').classList.remove('hidden');
+                document.getElementById('logoutButton').classList.add('block');
+            } else if (userRole === 'admin') {
+                document.getElementById('adminButton').classList.remove('hidden');
+                document.getElementById('adminButton').classList.add('block');
+                document.getElementById('validationButton').classList.remove('hidden');
+                document.getElementById('validationButton').classList.add('block');
+                document.getElementById('createButton').classList.remove('hidden');
+                document.getElementById('createButton').classList.add('block');
+                document.getElementById('logoutButton').classList.remove('hidden');
+                document.getElementById('logoutButton').classList.add('block');
+            } else {
+                document.getElementById('loginButton').classList.remove('hidden');
+                document.getElementById('loginButton').classList.add('block');
+            }
+        }
+
+        async function randomTeacher() {
+            try {
+                const response = await fetch('/random_teacher/');
+                const data = await response.json();
+
+                const randomTeacherInfo = document.getElementById('randomTeacherInfo');
+                if (response.ok) {
+                    let img_text;
+                    if (data.image_data) {
+                        img_text = `<img src="data:image/jpeg;base64,${data.image_data}" alt="Teacher Image" class="w-36 h-36 object-cover rounded-full border-2 border-green-400 mb-4">`;
+                    } else {
+                        img_text = '<img src="/static/images/apple.jpg" alt="Teacher Image" class="w-36 h-36 object-cover rounded-full border-2 border-green-400 mb-4">';
+                    }
+                    randomTeacherInfo.innerHTML = `
+                        <div class="teacher-home">
+                            ${img_text}
+                            <div class="teacher-details">
+                                <h2 class="text-2xl font-semibold text-white">${data.name}</h2>
+                                <p class="text-lg text-white"> from ${data.school} in ${data.county}, ${data.state}</p>
+                            </div>
+                        </div>
+                        <button onclick="redirectTo('/pages/teacher.html')" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md mt-4">View Random Teacher</button>`;
+                } else {
+                    randomTeacherInfo.innerHTML = "<p class='text-red-500'>Unable to fetch random teacher information. We are sorry.</p>";
+                }
+            } catch (error) {
+                console.error('Error fetching random teacher:', error);
+                document.getElementById('randomTeacherInfo').innerHTML = "<p class='text-red-500'>Error fetching random teacher. Please try again later.</p>";
+            }
+        }
+
+        async function logout() {
+            try {
+                const response = await fetch(`/logout/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Error during logout:', error);
+            }
+        }
+
+        async function teacherDay() {
+            try {
+                const response = await fetch(`/spotlight/teacher`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/pages/teacher.html';
+                } else {
+                    console.error('Error:', response.status);
+                    const teacherDayElement = document.getElementById('teacherDay');
+                    teacherDayElement.innerHTML = "<p class='text-red-500'>Unable to view Teacher of the Day. Please try again later.</p>";
+                }
+            } catch (error) {
+                console.error('Error fetching teacher of the day for redirect:', error);
+                const teacherDayElement = document.getElementById('teacherDay');
+                teacherDayElement.innerHTML = "<p class='text-red-500'>Error viewing Teacher of the Day. Please try again later.</p>";
+            }
+        }
+
+        async function getTeacherDay() {
+            try {
+                const response = await fetch('/spotlight/teacher');
+                const data = await response.json();
+
+                const teacherDayElement = document.getElementById('teacherDay');
+                if (response.ok) {
+                    let img_text;
+                    if (data.image_data) {
+                        img_text = `<img src="data:image/jpeg;base64,${data.image_data}" alt="Teacher Image" class="w-36 h-36 object-cover rounded-full border-2 border-green-400 mb-4">`;
+                    } else {
+                        img_text = '<img src="/static/images/apple.jpg" alt="Teacher Image" class="w-36 h-36 object-cover rounded-full border-2 border-green-400 mb-4">';
+                    }
+                    teacherDayElement.innerHTML = `
+                        <div class="teacher-home">
+                            ${img_text}
+                            <div class="teacher-details">
+                                <h2 class="text-2xl font-semibold text-white">${data.name}</h2>
+                                <p class="text-lg text-white"> from ${data.school} in ${data.county}, ${data.state}</p>
+                            </div>
+                        </div>
+                        <button onclick="teacherDay()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md mt-4">View Teacher of the Day</button>`;
+                } else {
+                    teacherDayElement.innerHTML = "<p class='text-red-500'>Unable to fetch teacher of the day. We are sorry.</p>";
+                }
+            } catch (error) {
+                console.error('Error fetching teacher of the day:', error);
+                document.getElementById('teacherDay').innerHTML = "<p class='text-red-500'>Error viewing Teacher of the Day. Please try again later.</p>";
+            }
+        }
+
+        async function mypage() {
+            try {
+                const response = await fetch('/myinfo/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/pages/teacher.html';
+                } else {
+                    console.error('Error:', response.status);
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Error fetching my page info:', error);
+                window.location.href = '/';
+            }
+        }
+
+        // --- NEW JAVASCRIPT FOR PROMO HERO ---
+        async function displayPromoHero() {
+            try {
+                const response = await fetch('/get_promo_info/');
+                if (response.ok) {
+                    const promoData = await response.json();
+                    
+                    const promoHeroSection = document.getElementById('promoHeroSection');
+                    const promoHeroImage = document.getElementById('promoHeroImage'); // Get the image element
+                    const promoHeroTitle = document.getElementById('promoHeroTitle');
+
+                    // Check if all necessary elements and data exist
+                    if (promoData.promo_image_url && promoHeroSection && promoHeroImage && promoHeroTitle) {
+                        // Set the src of the image tag
+                        promoHeroImage.src = promoData.promo_image_url; 
+                        
+                        promoHeroTitle.textContent = promoData.promo_title || "Special Promotion!";
+                        
+                        promoHeroSection.classList.remove('hidden'); // Make the section visible
+                        
+                        // Optional: Hide the default main hero if promo hero is shown
+                        document.querySelector('main > section:nth-of-type(2)').classList.add('hidden'); 
+                    } else {
+                        console.log("No promo data or elements found, keeping promo hero hidden.");
+                        promoHeroSection.classList.add('hidden'); // Ensure it's hidden if no data
+                    }
+                } else {
+                    console.error("Failed to fetch promo info:", response.status);
+                    document.getElementById('promoHeroSection').classList.add('hidden');
+                }
+            } catch (error) {
+                console.error("Error fetching promo info:", error);
+                document.getElementById('promoHeroSection').classList.add('hidden');
+            }
+        }
+
+        window.onload = function() {
+            checkAuthentication();
+            getTeacherDay();
+            displayPromoHero(); // Call the new function on page load
+        };
+    </script>
+</body>
+</html>
